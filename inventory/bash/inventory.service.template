@@ -11,16 +11,16 @@
     <txt-record>serialnumber=NA</txt-record>
     <txt-record>hardwareversion=NA</txt-record>
     <txt-record>macaddress=NA</txt-record>
-    <txt-record>swvers=NA</txt-record>
+    <txt-record>swvers=1.0.4</txt-record>
     <txt-record>softwareversion=NA</txt-record>
-    <txt-record>type=NA</txt-record>
+    <txt-record>type=OBU</txt-record>
     <txt-record>model=NA</txt-record>
     <txt-record>manufacturer=NA</txt-record>
     <txt-record>path=NA</txt-record>
     <txt-record>subdevices=false</txt-record>
     <txt-record>status=0</txt-record>
     <txt-record>xstatus=C000000000C0FFFF</txt-record>
-    <txt-record>services=NA</txt-record>
+    <txt-record>services=inventory</txt-record>
     <txt-record>update=NA</txt-record>
   </service>
 </service-group>
