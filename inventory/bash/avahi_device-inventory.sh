@@ -1,7 +1,7 @@
 #!/bin/bash
-
+export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 #==============================================================#
-## Avahi ITxPT device inventory updater ver. 1.0.4            ##
+## Avahi ITxPT device inventory updater ver. 1.0.5            ##
 # name: avahi_device-inventory.sh                              #
 # Written by: Anders Fromell                                   #
 # This is verified to work on:                                 #
@@ -13,9 +13,11 @@
 
 # ToDos...
 # autodetect LAN interface
+# add boottime key and commandline parameter to trigger it
 # .....
 
 # Default variables you might want to change...
+APPVERS=1.0.5
 SERVICE_FILE=inventory.service
 SERVICE_PATH=/etc/avahi/services/
 LAN=enp2s0
@@ -103,6 +105,7 @@ fi
 # print some if verbose..
 if [ "$VERBOSE" != "0" ]; then
 	echo
+	echo Inventory service version  = "${APPVERS}"
 	echo LAN INTERFACE   = "${LAN}"
 	echo SERVICE PATH    = "${SERVICE_PATH}"
 	echo SERVICE FILE    = "${SERVICE_FILE}"
@@ -122,8 +125,9 @@ case "$KRNL" in
 		*x86*)
 			# It seams like we are on a x86 box
 			[ "$VERBOSE" != "0" ] && echo "x86 present"
-			MODEL="Oracle VM $CPU_MODEL"
-			REV="NA"
+			MODEL="x86 $CPU_MODEL"
+			MAN=$(dmidecode -t 2|grep -m 1 "Manufacturer"|cut -d":" -f2|xargs)
+			REV=$(dmidecode -t 2|grep -m 1 "Version"|cut -d":" -f2|xargs)
 			# x86 (from dbus) installation CCID not hw CCID
 			SERIAL=$(cat /var/lib/dbus/machine-id)
 			;;
@@ -150,6 +154,16 @@ esac
 # remove any commas from MODEL
 MODEL=$(echo $MODEL| tr -d ,)
 
+# make sure  $MAN is populated
+if [ -z "$MAN" ]; then
+	MAN="NA"
+	[ "$VERBOSE" != "0" ] && echo "unable to read hardware manufacturer, defaults to: NA"
+	logger "$0 - unable to read hardware manufacturer, defaults to: NA"
+else
+	[ "$VERBOSE" != "0" ] && echo "sucessfully read hardware manufacturer, $MAN"
+        logger "$0 - hardware manufacturer was detected, $MAN  rev. $REV"
+fi
+
 ## get MAC for LAN interface
 LAN_MAC=$(cat /sys/class/net/$LAN/address)
 
@@ -160,10 +174,11 @@ UPDATE=$(date --iso-8601=seconds)
 # if verbose, print raw data after formatting..
 if [ "$VERBOSE" != "0" ]; then
 	echo
+	echo "Manufacturer: $MAN"
+	echo "Hardware version: $REV"
 	echo "Model: $MODEL"
 	echo "Serial: $SERIAL"
 	echo "Software version: $SWVERS"
-	echo "Hardware version: $REV"
 	echo "MAC address for $LAN: $LAN_MAC"
 	echo "Timestamp: $UPDATE"
 fi
@@ -179,15 +194,23 @@ msg=$(sed -i 's,^\([[:blank:]]*<txt-record>macaddress[ ]*=\).*,\1'$LAN_MAC$TXT_S
 [ "$?" != "0" ] &&  logger "$0 - inventory.service MACaddr update failed: $msg" && FAILED=1 || :
 [ "$VERBOSE" != "0" ] && echo mac done..
 
+msg=$(sed -i 's,^\([[:blank:]]*<txt-record>manufacturer[ ]*=\).*,\1'"$MAN$TXT_SUFFIX"',g' $SERVICE_PATH$SERVICE_FILE 2>&1)
+[ "$?" != "0" ] &&  logger "$0 - inventory.service manufacturer update failed: $msg" && FAILED=1 || :
+[ "$VERBOSE" != "0" ] && echo manufacturer info done..
+
 msg=$(sed -i 's,^\([[:blank:]]*<txt-record>model[ ]*=\).*,\1'"$MODEL$TXT_SUFFIX"',g' $SERVICE_PATH$SERVICE_FILE 2>&1)
 [ "$?" != "0" ] &&  logger "$0 - inventory.service model update failed: $msg" && FAILED=1 || :
 [ "$VERBOSE" != "0" ] && echo model info done..
 
 msg=$(sed -i 's,^\([[:blank:]]*<txt-record>hardwareversion[ ]*=\).*,\1'"$REV$TXT_SUFFIX"',g' $SERVICE_PATH$SERVICE_FILE 2>&1)
-[ "$?" != "0" ] &&  logger "$0 - inventory.service hwvers update failed: $msg" && FAILED=1 || :
+[ "$?" != "0" ] &&  logger "$0 - inventory.service hardwareversion update failed: $msg" && FAILED=1 || :
 [ "$VERBOSE" != "0" ] && echo hw done..
 
 msg=$(sed -i 's,^\([[:blank:]]*<txt-record>softwareversion[ ]*=\).*,\1'"$SWVERS$TXT_SUFFIX"',g' $SERVICE_PATH$SERVICE_FILE 2>&1)
+[ "$?" != "0" ] &&  logger "$0 - inventory.service softwareversion update failed: $msg" && FAILED=1 || :
+[ "$VERBOSE" != "0" ] && echo sw done..
+
+msg=$(sed -i 's,^\([[:blank:]]*<txt-record>swvers[ ]*=\).*,\1'"$APPVERS$TXT_SUFFIX"',g' $SERVICE_PATH$SERVICE_FILE 2>&1)
 [ "$?" != "0" ] &&  logger "$0 - inventory.service swvers update failed: $msg" && FAILED=1 || :
 [ "$VERBOSE" != "0" ] && echo sw done..
 
@@ -217,4 +240,5 @@ else
 	[ "$VERBOSE" != "0" ] && echo "STATUS: - $SERVICE_PATH$SERVICE_FILE updated successfully"
 
 fi
+
 exit 0
