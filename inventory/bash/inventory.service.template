@@ -7,11 +7,11 @@
     <type>_itxpt_socket._tcp</type>
     <port>9</port>
     <txt-record>txtvers=1</txt-record>
-    <txt-record>version=2.1</txt-record>    
+    <txt-record>version=2.1.1</txt-record>    
     <txt-record>serialnumber=NA</txt-record>
     <txt-record>hardwareversion=NA</txt-record>
     <txt-record>macaddress=NA</txt-record>
-    <txt-record>swvers=1.0.4</txt-record>
+    <txt-record>swvers=1.0.5</txt-record>
     <txt-record>softwareversion=NA</txt-record>
     <txt-record>type=OBU</txt-record>
     <txt-record>model=NA</txt-record>
