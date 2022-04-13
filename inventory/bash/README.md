@@ -23,6 +23,7 @@ The following txt key's are expected to be automatic populated by the script, ot
 | swvers          | 1.0.5        | follows the version of the script |
 | manufacturer    | 1.0.5        | currently only on x86             |
 | hardwareversion | 1.0.5        | currently only on x86             |
+| hardwareversion | 1.0.6        | currently on x86 and moxa         |
 
 The script can be run from the command line, but needs to be run with sudo rights
 To get a more consistent approatch, run it from crontab..
@@ -37,7 +38,7 @@ See INSTALL.md for a complete instruction (TBD)
 |------------|---------|-------------------------------------------------------------------------------|
 | 2021-10-13 | 1.0.4   | Initial publication, minor code cleanup from 1.0.0 and alignment to v2.1.1    |
 | 2021-10-18 | 1.0.5   | added support for manufacturer and hardwareversion on x86                     |
-
+| 2021-10-18 | 1.0.6   | added support for manufacturer and hardwareversion on moxa arm7l              |
 
 ** Known issues:**
 1. There is a delay in nn minutes in some cases before clients gets the latest update from the script. Most likely due to that toutch the .service file do not trigger a proper "flush cash" procedur before sending the update. A more correct way might be using Dbus.
