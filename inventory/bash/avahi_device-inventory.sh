@@ -1,7 +1,7 @@
 #!/bin/bash
 export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 #==============================================================#
-## Avahi ITxPT device inventory updater ver. 1.0.5            ##
+## Avahi ITxPT device inventory updater ver. 1.0.6            ##
 # name: avahi_device-inventory.sh                              #
 # Written by: Anders Fromell                                   #
 # This is verified to work on:                                 #
@@ -9,6 +9,7 @@ export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 # - x86 PC with ubuntu 20.04                                   #
 # - Raspberry PI 2B with ubuntu 16.04 server armv7l            #
 # - Raspberry PI 2B with ubuntu 20.04 server armv7l            #
+# - moxa embedded with debian stretch arm7l                    #
 #==============================================================#
 
 # ToDos...
@@ -17,12 +18,12 @@ export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 # .....
 
 # Default variables you might want to change...
-APPVERS=1.0.5
+APPVERS=1.0.6
 SERVICE_FILE=inventory.service
 SERVICE_PATH=/etc/avahi/services/
-LAN=enp2s0
+#LAN=enp2s0
 #LAN=enp0s8
-#LAN=eth0
+LAN=eth0
 
 
 # internal defaults, constants and vars ; do not change..
@@ -140,6 +141,16 @@ case "$KRNL" in
 			# (cpu serial)
 			SERIAL=$(cat /proc/cpuinfo | grep ^Serial | cut -d":" -f2 | xargs)
 			;;
+		*moxa*)
+			# It seams like we are on a moxa ARMv7 device
+			[ "$VERBOSE" != "0" ] && echo "moxa ARMv7 device present"
+			HW=$(cat /proc/cpuinfo | grep ^Hardware | cut -d":" -f2 | xargs)
+			REV=$(kversion -a| cut -d"n" -f2 | xargs)
+			MODEL=$(kversion | cut -d" " -f1 | xargs)
+			# (installation CCID)
+			SERIAL=$(cat /var/lib/dbus/machine-id)
+			MAN="Moxa"
+			;;
 		*Placeholder*)
 			# This is a placeholder for new targets
 			[ "$VERBOSE" != "0" ] && echo "raspi present"
@@ -147,6 +158,12 @@ case "$KRNL" in
 		*)
 			# we dont have a clue
 			[ "$VERBOSE" != "0" ] && echo "unknown hardware"
+			HW=$(cat /proc/cpuinfo | grep ^Hardware | cut -d":" -f2 | xargs)
+			REV=$(cat /proc/cpuinfo | grep ^Revision | cut -d":" -f2 | xargs)
+			MODEL="$HW $CPU_MODEL"
+			# (cpu serial)
+			SERIAL=$(cat /proc/cpuinfo | grep ^Serial | cut -d":" -f2 | xargs)
+			MAN="unknown hardware"
 			;;
 esac
 
