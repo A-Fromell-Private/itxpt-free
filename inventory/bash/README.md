@@ -28,7 +28,21 @@ The following txt key's are expected to be automatic populated by the script, ot
 The script can be run from the command line, but needs to be run with sudo rights
 To get a more consistent approatch, run it from crontab..
 
-Use commandline parameter -h or --help to se all options.
+Ex:
+copy the script and the template to:
+/opt/inventory/
+.. and make sure they are owned and kan be run by root
+
+Use the command: sudo crontab -e
+.. to edit the root crontab job list
+.. add the line:
+*/10 * * * * /opt/inventory/avahi_device-inventory.sh
+
+
+
+Use commandline parameter -h or --help to se all options of the script.
+.. make sure you point to the right ethernet interface !
+
 
 See INSTALL.md for a complete instruction (TBD)
 
