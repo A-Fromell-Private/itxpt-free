@@ -1,7 +1,7 @@
 #!/bin/bash
 export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 #==============================================================#
-## Avahi ITxPT device inventory updater ver. 1.0.6            ##
+## Avahi ITxPT device inventory updater ver. 1.0.7            ##
 # name: avahi_device-inventory.sh                              #
 # Written by: Anders Fromell                                   #
 # This is verified to work on:                                 #
@@ -10,6 +10,7 @@ export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 # - Raspberry PI 2B with ubuntu 16.04 server armv7l            #
 # - Raspberry PI 2B with ubuntu 20.04 server armv7l            #
 # - moxa embedded with debian stretch arm7l                    #
+# - test with Rpi4b (experimental)                             #
 #==============================================================#
 
 # ToDos...
@@ -163,7 +164,7 @@ case "$KRNL" in
 			MODEL="$HW $CPU_MODEL"
 			# (cpu serial)
 			SERIAL=$(cat /proc/cpuinfo | grep ^Serial | cut -d":" -f2 | xargs)
-			MAN="unknown hardware"
+			MAN=$(cat /proc/cpuinfo|grep -m 1 "Model"|cut -d":" -f2 | xargs)
 			;;
 esac
 
