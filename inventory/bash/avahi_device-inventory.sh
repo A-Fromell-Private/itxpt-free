@@ -1,7 +1,7 @@
 #!/bin/bash
 export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 #==============================================================#
-## Avahi ITxPT device inventory updater ver. 1.0.7            ##
+## Avahi ITxPT device inventory updater ver. b1.0.8            ##
 # name: avahi_device-inventory.sh                              #
 # Written by: Anders Fromell                                   #
 # This is verified to work on:                                 #
@@ -19,7 +19,7 @@ export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 # .....
 
 # Default variables you might want to change...
-APPVERS=1.0.6
+APPVERS=1.0.8
 SERVICE_FILE=inventory.service
 SERVICE_PATH=/etc/avahi/services/
 #LAN=enp2s0
@@ -113,7 +113,8 @@ if [ "$VERBOSE" != "0" ]; then
 	echo SERVICE FILE    = "${SERVICE_FILE}"
 fi
 
-# Grab the OS version and cpu serial and hardware type and MAC
+# Grab the CPU architecture, OS version and cpu serial and hardware type and MAC
+CPU_ARCH=$(uname -p)
 KRNL=$(uname -srp)
 DIST=$(lsb_release --description | grep ^Description| cut -d":" -f2 | xargs)
 SWVERS="$DIST $KRNL"
