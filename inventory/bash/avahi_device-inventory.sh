@@ -115,6 +115,9 @@ fi
 
 # Grab the OS version and cpu serial and hardware type and MAC
 KRNL=$(uname -srp)
+# cpu architecture via hostnamectl
+# CPU_ARCHITECTURE=$(hostnamectl | grep -m 1 "Architecture"| cut -d":" -f2 | xargs)
+
 DIST=$(lsb_release --description | grep ^Description| cut -d":" -f2 | xargs)
 SWVERS="$DIST $KRNL"
 
@@ -129,6 +132,7 @@ case "$KRNL" in
 			[ "$VERBOSE" != "0" ] && echo "x86 present"
 			MODEL="x86 $CPU_MODEL"
 			MAN=$(dmidecode -t 2|grep -m 1 "Manufacturer"|cut -d":" -f2|xargs)
+   			# MAN=$(hostnamectl | grep -m 1 "Hardware Vendor"| cut -d":" -f2 | xargs)
 			REV=$(dmidecode -t 2|grep -m 1 "Version"|cut -d":" -f2|xargs)
 			# x86 (from dbus) installation CCID not hw CCID
 			SERIAL=$(cat /var/lib/dbus/machine-id)
@@ -139,6 +143,7 @@ case "$KRNL" in
 			HW=$(cat /proc/cpuinfo | grep ^Hardware | cut -d":" -f2 | xargs)
 			REV=$(cat /proc/cpuinfo | grep ^Revision | cut -d":" -f2 | xargs)
 			MODEL="RPI2B $HW $CPU_MODEL"
+   			MAN=$(cat /proc/cpuinfo|grep -m 1 "Model"|cut -d":" -f2 |cut -d" " -f2-3 | xargs)
 			# (cpu serial)
 			SERIAL=$(cat /proc/cpuinfo | grep ^Serial | cut -d":" -f2 | xargs)
 			;;
