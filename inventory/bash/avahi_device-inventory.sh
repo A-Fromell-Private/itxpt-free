@@ -1,16 +1,16 @@
 #!/bin/bash
 export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 #==============================================================#
-## Avahi ITxPT device inventory updater ver. 1.0.7            ##
+## Avahi ITxPT device inventory updater ver. 1.0.6            ##
 # name: avahi_device-inventory.sh                              #
 # Written by: Anders Fromell                                   #
 # This is verified to work on:                                 #
 # - x86 PC with ubuntu 16.04                                   #
 # - x86 PC with ubuntu 20.04                                   #
 # - Raspberry PI 2B with ubuntu 16.04 server armv7l            #
-# - Raspberry PI 2B with ubuntu 20.04 server armv7l            #
+# - Raspberry PI 3B with ubuntu 20.04 server armv7l            #
 # - moxa embedded with debian stretch arm7l                    #
-# - test with Rpi4b (experimental)                             #
+# - test with Rpi4b Raspbian (experimental)                    #
 #==============================================================#
 
 # ToDos...
