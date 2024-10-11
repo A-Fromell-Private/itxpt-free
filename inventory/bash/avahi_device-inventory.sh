@@ -1,16 +1,20 @@
 #!/bin/bash
 export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 #==============================================================#
-## Avahi ITxPT device inventory updater ver. 1.0.6            ##
+## Avahi ITxPT device inventory updater ver. 1.0.8            ##
 # name: avahi_device-inventory.sh                              #
 # Written by: Anders Fromell                                   #
 # This is verified to work on:                                 #
 # - x86 PC with ubuntu 16.04                                   #
 # - x86 PC with ubuntu 20.04                                   #
+# - x86 PC with ubuntu 22.04                                   #
 # - Raspberry PI 2B with ubuntu 16.04 server armv7l            #
 # - Raspberry PI 3B with ubuntu 20.04 server armv7l            #
 # - moxa embedded with debian stretch arm7l                    #
-# - test with Rpi4b Raspbian (experimental)                    #
+# - test with Rpi4b (experimental)                             #
+# - change "update" key to "atdatetime"                        #
+# - added TxT key "interval" in the template, telling the      #
+#   expected freq of updates of the TxT record                 #
 #==============================================================#
 
 # ToDos...
@@ -19,7 +23,7 @@ export PATH=/sbin:/bin:/usr/bin:/usr/sbin
 # .....
 
 # Default variables you might want to change...
-APPVERS=1.0.6
+APPVERS=1.0.8
 SERVICE_FILE=inventory.service
 SERVICE_PATH=/etc/avahi/services/
 #LAN=enp2s0
@@ -113,7 +117,8 @@ if [ "$VERBOSE" != "0" ]; then
 	echo SERVICE FILE    = "${SERVICE_FILE}"
 fi
 
-# Grab the OS version and cpu serial and hardware type and MAC
+# Grab the CPU architecture, OS version and cpu serial and hardware type and MAC
+CPU_ARCH=$(uname -p)
 KRNL=$(uname -srp)
 # cpu architecture via hostnamectl
 # CPU_ARCHITECTURE=$(hostnamectl | grep -m 1 "Architecture"| cut -d":" -f2 | xargs)
@@ -203,7 +208,7 @@ if [ "$VERBOSE" != "0" ]; then
 	echo "Serial: $SERIAL"
 	echo "Software version: $SWVERS"
 	echo "MAC address for $LAN: $LAN_MAC"
-	echo "Timestamp: $UPDATE"
+	echo "atDateTime: $UPDATE"
 fi
 
 # updating the inventory.service file
@@ -237,7 +242,7 @@ msg=$(sed -i 's,^\([[:blank:]]*<txt-record>swvers[ ]*=\).*,\1'"$APPVERS$TXT_SUFF
 [ "$?" != "0" ] &&  logger "$0 - inventory.service swvers update failed: $msg" && FAILED=1 || :
 [ "$VERBOSE" != "0" ] && echo sw done..
 
-msg=$(sed -i 's,^\([[:blank:]]*<txt-record>update[ ]*=\).*,\1'"$UPDATE$TXT_SUFFIX"',g' $SERVICE_PATH$SERVICE_FILE 2>&1)
+msg=$(sed -i 's,^\([[:blank:]]*<txt-record>atdatetime[ ]*=\).*,\1'"$UPDATE$TXT_SUFFIX"',g' $SERVICE_PATH$SERVICE_FILE 2>&1)
 [ "$?" != "0" ] &&  logger "$0 - inventory.service timestamp update failed: $msg" && FAILED=1 || :
 [ "$VERBOSE" != "0" ] && echo timestamp info done..
 

@@ -1,9 +1,9 @@
 **Example bash scripts for ITxPT module inventory**
 --------------------------------------
-This example is based on ITxPT specification S02 and version 2.1.1
+This example is based on ITxPT specification S02 and version 2.2.0
 
 The intention is to show what a compliant module inventory dns-sd (txt record) output looks like, not to be a part of a complete production solution.
-The script also adds an additional key "update=" with a timestamp (when the record was generated) formatted according to ITxPT TR-001.
+
 
 **History:**
 
@@ -24,6 +24,7 @@ The following txt key's are expected to be automatic populated by the script, ot
 | manufacturer    | 1.0.5        | currently only on x86             |
 | hardwareversion | 1.0.5        | currently only on x86             |
 | hardwareversion | 1.0.6        | currently on x86 and moxa         |
+| atdatetime      | 1.0.8        | a timestamp of the record         |
 
 The script can be run from the command line, but needs to be run with sudo rights
 To get a more consistent approatch, run it from crontab..
@@ -53,6 +54,7 @@ See INSTALL.md for a complete instruction (TBD)
 | 2021-10-13 | 1.0.4   | Initial publication, minor code cleanup from 1.0.0 and alignment to v2.1.1    |
 | 2021-10-18 | 1.0.5   | added support for manufacturer and hardwareversion on x86                     |
 | 2021-10-18 | 1.0.6   | added support for manufacturer and hardwareversion on moxa arm7l              |
+| 2024-10-11 | 1.0.8   | added support for Rpi4 and ITxPT inventory ver. 2.2.0                         |
 
 ** Known issues:**
 1. There is a delay in nn minutes in some cases before clients gets the latest update from the script. Most likely due to that toutch the .service file do not trigger a proper "flush cash" procedur before sending the update. A more correct way might be using Dbus.

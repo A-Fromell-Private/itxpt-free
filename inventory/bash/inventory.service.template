@@ -7,11 +7,11 @@
     <type>_itxpt_socket._tcp</type>
     <port>9</port>
     <txt-record>txtvers=1</txt-record>
-    <txt-record>version=2.1.1</txt-record>    
+    <txt-record>version=2.1.4</txt-record>    
     <txt-record>serialnumber=NA</txt-record>
     <txt-record>hardwareversion=NA</txt-record>
     <txt-record>macaddress=NA</txt-record>
-    <txt-record>swvers=1.0.5</txt-record>
+    <txt-record>swvers=1.0.8</txt-record>
     <txt-record>softwareversion=NA</txt-record>
     <txt-record>type=OBU</txt-record>
     <txt-record>model=NA</txt-record>
@@ -21,6 +21,7 @@
     <txt-record>status=0</txt-record>
     <txt-record>xstatus=C000000000C0FFFF</txt-record>
     <txt-record>services=inventory</txt-record>
-    <txt-record>update=NA</txt-record>
+    <txt-record>atdatetime=NA</txt-record>
+    <txt-record>interval=10</txt-record>
   </service>
 </service-group>
